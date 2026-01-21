@@ -95,11 +95,13 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     restart: always
+    volumes:
+      - postgres-dwh-volume:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
   minio:
-    image: minio/minio:RELEASE.latest
+    image: minio/minio:RELEASE.2025-02-18T16-25-55Z
     restart: always
     user: "1000:1000"
     volumes:
@@ -122,6 +124,10 @@ services:
       context: ./metabase
       dockerfile: Dockerfile
     container_name: metabase
+    environment:
+      - MB_DB_FILE=/metabase-data/metabase.db
+    volumes:
+      - metabase-data:/metabase-data
     ports:
       - "3000:3000"
 
@@ -373,3 +379,5 @@ services:
 
 volumes:
   postgres-db-volume:
+  postgres-dwh-volume:
+  metabase-data:
